@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz KHTN 9 – Chương I và VI</title>
+<style>
+:root{--bg:#f6f7fb;--fg:#1c2030;--card:#fff;--bd:#dde1ec;--mut:#667;--ac:#3b5bdb;--acf:#fff;--ok:#2b8a3e;--okb:#e3f6e8;--bad:#c92a2a;--badb:#fde8e8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161f;--fg:#e8eaf2;--card:#1e2130;--bd:#33384c;--mut:#9aa1b8;--ac:#7c93ff;--acf:#10132a;--ok:#69db7c;--okb:#17301f;--bad:#ff8787;--badb:#3a1c1f}}
+:root[data-theme="dark"]{--bg:#14161f;--fg:#e8eaf2;--card:#1e2130;--bd:#33384c;--mut:#9aa1b8;--ac:#7c93ff;--acf:#10132a;--ok:#69db7c;--okb:#17301f;--bad:#ff8787;--badb:#3a1c1f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.5rem;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin:14px 0}
+.mut{color:var(--mut);font-size:.9rem}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
+.btn:hover:not(:disabled){border-color:var(--ac)}
+.pri{background:var(--ac);color:var(--acf);border-color:var(--ac);text-align:center;font-weight:600}
+.ok{background:var(--okb);border-color:var(--ok)}
+.bad{background:var(--badb);border-color:var(--bad)}
+.bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac);transition:width .3s}
+.q{font-size:1.1rem;font-weight:600;margin:14px 0 6px}
+.ex{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.95rem}
+.big{font-size:3rem;font-weight:700;text-align:center;margin:6px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// [chương, câu hỏi, [đáp án đúng, sai, sai, sai], giải thích]
+const Q=[
+[1,"Động năng của vật phụ thuộc vào yếu tố nào?",["Khối lượng và tốc độ","Khối lượng và độ cao","Thể tích và độ cao","Chỉ nhiệt độ"],"Wđ = ½·m·v²."],
+[1,"Ô tô 1000 kg chạy với tốc độ 20 m/s. Động năng của ô tô là:",["200 000 J","20 000 J","400 000 J","10 000 J"],"½·1000·20² = 200 000 J."],
+[1,"Vật 2 kg ở độ cao 5 m (g = 10 m/s²). Thế năng của vật là:",["100 J","10 J","50 J","20 J"],"Wt = 2·10·5 = 100 J."],
+[1,"Cơ năng của vật bằng:",["Tổng động năng và thế năng","Hiệu động năng và thế năng","Tích động năng và thế năng","Thương động năng và thế năng"],"W = Wđ + Wt."],
+[1,"Cơ năng của vật được bảo toàn khi:",["Chỉ chịu tác dụng của trọng lực","Có lực ma sát lớn","Có lực cản không khí","Có lực kéo của động cơ"],"Bỏ qua lực cản, ma sát."],
+[1,"Ném vật lên cao (bỏ qua lực cản). Khi vật đi lên:",["Động năng giảm, thế năng tăng","Động năng tăng, thế năng giảm","Cả hai cùng tăng","Cả hai cùng giảm"],"Động năng chuyển hoá thành thế năng."],
+[1,"Thả rơi vật 0,2 kg từ độ cao 20 m (bỏ qua lực cản). Tốc độ khi chạm đất là:",["20 m/s","10 m/s","40 m/s","200 m/s"],"Wt = 40 J = ½·0,2·v², suy ra v = 20 m/s."],
+[1,"Vật A (khối lượng m, tốc độ 2v) và vật B (khối lượng 2m, tốc độ v). Động năng của A so với B:",["Gấp 2 lần","Bằng nhau","Gấp 4 lần","Bằng một nửa"],"A: 2mv²; B: mv²."],
+[1,"Có công cơ học khi:",["Có lực tác dụng làm vật chuyển dời","Vật đứng yên chịu lực tác dụng","Vật có khối lượng lớn","Vật ở độ cao lớn"],"A = F·s."],
+[1,"Nâng đều thùng hàng 20 kg lên cao 3 m. Công thực hiện là:",["600 J","60 J","200 J","6000 J"],"F = 200 N; A = 200·3 = 600 J."],
+[1,"Công suất cho biết:",["Tốc độ thực hiện công","Độ lớn của lực","Quãng đường vật đi","Khối lượng của vật"],"P = A/t."],
+[1,"Máy bơm thực hiện công 36 000 J trong 20 s. Công suất là:",["1800 W","720 000 W","18 W","180 W"],"P = 36 000 / 20 = 1800 W."],
+[1,"Động cơ 2 kW hoạt động 30 phút. Công thực hiện được là:",["3 600 000 J","60 000 J","3600 J","120 000 J"],"A = 2000·1800 = 3 600 000 J."],
+[1,"1 kW bằng:",["1000 W","100 W","10 W","10 000 W"],"1 kW = 1000 W = 1000 J/s."],
+[1,"Khối lượng không đổi, tốc độ tăng gấp đôi thì động năng:",["Tăng 4 lần","Tăng 2 lần","Tăng 8 lần","Không đổi"],"Wđ tỉ lệ với v²."],
+[6,"Tính chất vật lí chung của kim loại là:",["Dẻo, dẫn điện, dẫn nhiệt, có ánh kim","Giòn, không dẫn điện","Luôn ở thể lỏng","Không có ánh kim"],""],
+[6,"Cán xoong nhôm thường làm bằng nhựa vì:",["Nhựa dẫn nhiệt kém, tránh bị bỏng","Nhựa dẫn điện tốt","Nhựa nặng hơn nhôm","Nhựa có ánh kim"],""],
+[6,"Sản phẩm khi đốt magnesium trong oxygen là:",["MgO","Mg₂O","MgO₂","Mg(OH)₂"],"2Mg + O₂ → 2MgO."],
+[6,"Sodium tác dụng với khí chlorine tạo ra:",["NaCl","NaCl₂","Na₂Cl","NaClO"],"2Na + Cl₂ → 2NaCl."],
+[6,"Kim loại nào không phản ứng với dung dịch HCl loãng?",["Cu","Zn","Fe","Mg"],"Cu đứng sau H trong dãy hoạt động hoá học."],
+[6,"Dãy kim loại xếp theo mức độ hoạt động hoá học giảm dần:",["K, Mg, Zn, Cu, Ag","Cu, Zn, Mg, K, Ag","Ag, Cu, Zn, Mg, K","Zn, K, Mg, Ag, Cu"],""],
+[6,"Nhúng đinh sắt vào dung dịch CuSO₄, hiện tượng quan sát được là:",["Có chất rắn màu đỏ bám vào đinh, dung dịch nhạt màu xanh","Có khí không màu thoát ra","Đinh sắt tan hết, tạo kết tủa trắng","Không có hiện tượng"],"Fe + CuSO₄ → FeSO₄ + Cu."],
+[6,"Cặp chất nào xảy ra phản ứng?",["Zn và dung dịch FeSO₄","Cu và dung dịch ZnCl₂","Ag và dung dịch CuSO₄","Cu và dung dịch MgSO₄"],"Zn mạnh hơn Fe nên đẩy Fe ra khỏi muối."],
+[6,"Cho 6,5 g Zn tác dụng với HCl dư (Zn = 65). Thể tích H₂ ở điều kiện chuẩn (24,79 L/mol) là:",["2,479 L","4,958 L","0,2479 L","24,79 L"],"n(Zn) = 0,1 mol, n(H₂) = 0,1 mol."],
+[6,"Cho 5,6 g Fe tác dụng hoàn toàn với CuSO₄ dư (Fe = 56, Cu = 64). Khối lượng Cu thu được là:",["6,4 g","3,2 g","12,8 g","5,6 g"],"n(Fe) = n(Cu) = 0,1 mol."],
+[6,"Nhôm được sản xuất bằng phương pháp:",["Điện phân nóng chảy Al₂O₃","Khử Al₂O₃ bằng khí CO","Thuỷ luyện","Nhiệt phân Al₂O₃"],"Kim loại hoạt động mạnh dùng điện phân nóng chảy."],
+[6,"Trong lò cao: Fe₂O₃ + 3CO → ?",["2Fe + 3CO₂","2Fe + 3C","Fe + CO₂","2Fe + 3O₂"],"Nhiệt luyện: CO khử oxide sắt."],
+[6,"Hợp kim là:",["Vật liệu kim loại có kim loại cơ bản và các nguyên tố khác","Kim loại nguyên chất","Hỗn hợp các phi kim","Oxide của kim loại"],""],
+[6,"Gang và thép khác nhau ở chỗ:",["Thép chứa dưới 2% C, gang chứa 2% đến 5% C","Thép chứa 2% đến 5% C, gang dưới 2% C","Chỉ gang có carbon","Thép là sắt nguyên chất"],""],
+[6,"Điểm khác nhau cơ bản giữa kim loại và phi kim là:",["Oxide kim loại thường là oxide base, oxide phi kim thường là oxide acid","Oxide kim loại thường là oxide acid, oxide phi kim thường là oxide base","Cả hai đều dẫn điện tốt","Phi kim luôn dẻo và có ánh kim"],""],
+[7,"Dãy nào sau đây gồm toàn kim loại?",["Na, Mg, Fe, Cu","Na, S, Fe, Cu","Mg, C, Fe, Cu","Al, Cl₂, Zn, Ag"],"S, C, Cl₂ là phi kim."],
+[7,"Chất rắn màu vàng, giòn, không dẫn điện, nóng chảy ở khoảng 115 °C là:",["Sulfur (phi kim)","Copper (kim loại)","Aluminium (kim loại)","Iron (kim loại)"],"Kim loại dẫn điện, dẻo; phi kim rắn thường giòn, không dẫn điện."],
+[7,"Cách đơn giản để tách hoặc phân biệt bột Fe với bột S là:",["Dùng nam châm: Fe bị hút, S không","Cho vào nước: S tan","Quan sát màu: hai bột giống nhau","Cho vào dung dịch NaCl"],"Fe bị nam châm hút, S thì không."],
+[7,"Phân biệt Al và Cu bằng dung dịch HCl loãng, hiện tượng đúng là:",["Al tan, có khí H₂ thoát ra; Cu không phản ứng","Cu tan, có khí thoát ra; Al không phản ứng","Cả hai cùng tan","Cả hai đều không phản ứng"],"2Al + 6HCl → 2AlCl₃ + 3H₂; Cu đứng sau H nên không phản ứng."],
+[7,"Na₂O thuộc loại hợp chất nào?",["Oxide base","Oxide acid","Muối","Acid"],"Oxide của kim loại thường là oxide base."],
+[7,"Dãy nào gồm toàn oxide acid?",["CO₂, SO₂, P₂O₅","Na₂O, CaO, CuO","CO₂, CaO, SO₂","Na₂O, SO₂, MgO"],"Oxide của phi kim thường là oxide acid."],
+[7,"Dãy nào gồm toàn oxide base?",["Na₂O, CaO, CuO","CO₂, SO₂, P₂O₅","CaO, SO₂, CuO","Na₂O, CO₂, MgO"],"Oxide của kim loại thường là oxide base."],
+[7,"Phương trình nào viết đúng (đã cân bằng)?",["4Al + 3O₂ → 2Al₂O₃","Al + O₂ → AlO₂","2Al + O₂ → Al₂O₃","Al + 3O₂ → Al₂O₃"],"Số nguyên tử Al và O ở hai vế phải bằng nhau."],
+[7,"Đốt sulfur trong oxygen: S + O₂ → ?",["SO₂","SO₃","S₂O","SO"],"S + O₂ → SO₂ (t°). SO₂ là oxide acid."],
+[7,"CuO + 2HCl → ?",["CuCl₂ + H₂O","CuCl + H₂O","Cu + Cl₂ + H₂O","CuCl₂ + H₂"],"Oxide base + acid → muối + nước."],
+[7,"Dẫn khí CO₂ vào dung dịch Ca(OH)₂ dư: CO₂ + Ca(OH)₂ → ?",["CaCO₃ + H₂O","CaO + H₂CO₃","CaCO₃ + H₂","Ca(HCO₃)₂ + H₂"],"Oxide acid + base → muối + nước (xuất hiện kết tủa trắng CaCO₃)."],
+[7,"Na₂O + H₂O → ?",["2NaOH","Na₂OH","NaOH + H₂","Na + H₂O₂"],"Oxide base tan trong nước tạo dung dịch base."],
+[7,"Đun nóng hỗn hợp bột Fe và S: Fe + S → ?",["FeS","FeS₂","Fe₂S₃","Fe₂S"],"Fe + S → FeS (t°): kim loại + phi kim → muối."],
+[7,"Cân bằng: Zn + ?HCl → ZnCl₂ + H₂. Hệ số của HCl là:",["2","1","3","4"],"Zn + 2HCl → ZnCl₂ + H₂."],
+[7,"Mg + H₂SO₄ loãng → ?",["MgSO₄ + H₂","MgSO₄ + H₂O","Mg₂SO₄ + H₂","MgS + H₂O"],"Kim loại đứng trước H + acid → muối + H₂."],
+[7,"Tổng hệ số cân bằng (số nguyên nhỏ nhất) của 4Al + 3O₂ → 2Al₂O₃ là:",["9","7","5","10"],"4 + 3 + 2 = 9."]
+];
+const $=document.getElementById('app');
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let S;
+function home(){
+  const f=c=>Q.filter(q=>!c||q[0]===c||(c===6&&q[0]===7)),n=c=>f(c).length;
+  $.innerHTML=`<h1>Quiz KHTN 9</h1><p class="mut">Chương I: Năng lượng cơ học · Chương VI: Kim loại, phi kim. Mỗi câu có 1 đáp án đúng.</p>
+  <div class="card"><button class="btn pri" data-c="0">Cả hai chương (${n(0)} câu)</button>
+  <button class="btn" data-c="1">Chương I (${n(1)} câu)</button>
+  <button class="btn" data-c="6">Chương VI (${n(6)} câu)</button>
+  <button class="btn" data-c="7">Chuyên đề: phân biệt kim loại – phi kim, oxide, viết phương trình (${n(7)} câu)</button></div>`;
+  $.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>start(f(+b.dataset.c)));
+}
+function start(l){S={l:sh(l),i:0,s:0,w:[]};show()}
+function show(){
+  if(S.i>=S.l.length)return end();
+  const q=S.l[S.i],o=sh(q[2].map((t,k)=>[t,k===0]));
+  $.innerHTML=`<div class="mut">Câu ${S.i+1}/${S.l.length} · Đúng: ${S.s}</div><div class="bar"><i style="width:${S.i/S.l.length*100}%"></i></div>
+  <div class="q">${q[1]}</div><div id="o">${o.map((x,k)=>`<button class="btn" data-k="${k}">${x[0]}</button>`).join('')}</div><div id="f"></div>`;
+  $.querySelectorAll('#o .btn').forEach(b=>b.onclick=()=>{
+    const bs=$.querySelectorAll('#o .btn'),k=+b.dataset.k,good=o[k][1];
+    bs.forEach((x,j)=>{x.disabled=true;if(o[j][1])x.classList.add('ok')});
+    if(good)S.s++;else{b.classList.add('bad');S.w.push(q)}
+    document.getElementById('f').innerHTML=`<div class="ex"><b>${good?'Chính xác!':'Chưa đúng.'}</b> ${q[3]}</div><button class="btn pri" id="nx">${S.i+1<S.l.length?'Câu tiếp theo':'Xem kết quả'}</button>`;
+    document.getElementById('nx').onclick=()=>{S.i++;show()};
+  });
+}
+function end(){
+  const t=S.l.length,p=Math.round(S.s/t*100);
+  $.innerHTML=`<h1>Kết quả</h1><div class="card"><div class="big">${S.s}/${t}</div><p style="text-align:center" class="mut">${p}% · ${p>=80?'Rất tốt, bạn nắm bài chắc rồi!':p>=50?'Khá ổn, ôn lại các câu sai nhé.':'Cần ôn thêm, thử làm lại nhé!'}</p></div>
+  ${S.w.length?`<button class="btn pri" id="rw">Làm lại ${S.w.length} câu sai</button>`:''}
+  <button class="btn" id="hm">Về trang đầu</button>`;
+  if(S.w.length)document.getElementById('rw').onclick=()=>start(S.w);
+  document.getElementById('hm').onclick=home;
+}
+home();
+</script>
+</body>
+</html>
